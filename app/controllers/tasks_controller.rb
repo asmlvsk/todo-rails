@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-    before_action :set_task, only: %i[show update destroy]
+    before_action :set_task!, only: %i[show update destroy]
 
     # GET /tasks
     def index
@@ -48,7 +48,7 @@ class TasksController < ApplicationController
         params.require(:task).permit(:title, :body)
     end
 
-    def set_task
+    def set_task!
         @task = Task.find_by id: params[:id]
     end
 end
