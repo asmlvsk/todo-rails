@@ -1,4 +1,5 @@
 class TasksController < ApplicationController
+    skip_before_action :verify_authenticity_token
     before_action :set_task!, only: %i[show update destroy]
 
     # GET /tasks
@@ -19,20 +20,22 @@ class TasksController < ApplicationController
 
     # POST /tasks
     def create
-        @task = Task.new task_params
-        if(@task.save)
-            render json: @task, status: :created
+        task = Task.new task_params
+        if(task.save)
+            json_string = TaskSerializer.new(task).serializable_hash.to_json
+            render json: json_string, status: :created
         else
-            render json: @task.errors, status: :unprocessable_entity
+            render json: task.errors, status: :unprocessable_entity
         end
     end
 
     # PATCH /tasks/:id
     def update
         if @task.update task_params
-            render json: @task, status: :ok
+            json_string = TaskSerializer.new(@task).serializable_hash.to_json
+            render json: json_string, status: :ok
         else
-            render json: @task.errors, status: :unprocessable_entity
+            render json: task.errors, status: :unprocessable_entity
         end
     end
 
@@ -45,7 +48,7 @@ class TasksController < ApplicationController
     private
 
     def task_params
-        params.require(:task).permit(:title, :body)
+        params.require(:task).permit(:title, :body, :is_done)
     end
 
     def set_task!
