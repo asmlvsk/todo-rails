@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :users
   resources :categories
   resources :tasks, only: [:index, :create, :update, :destroy, :show]
   devise_for :admin_users, ActiveAdmin::Devise.config

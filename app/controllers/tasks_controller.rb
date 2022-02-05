@@ -35,7 +35,7 @@ class TasksController < ApplicationController
             json_string = TaskSerializer.new(@task).serializable_hash.to_json
             render json: json_string, status: :ok
         else
-            render json: task.errors, status: :unprocessable_entity
+            render json: @task.errors, status: :unprocessable_entity
         end
     end
 
