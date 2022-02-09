@@ -1,9 +1,11 @@
 class TasksController < ApplicationController
     before_action :set_task!, only: %i[show update destroy]
 
+    include CurrentUserConcern
+
     # GET /tasks
     def index
-        @task = Task.all
+        @task = @current_user.tasks.all
         json_string = TaskSerializer.new(@task).serializable_hash.to_json
         render json: json_string
     end
@@ -19,7 +21,7 @@ class TasksController < ApplicationController
 
     # POST /tasks
     def create
-        task = Task.new task_params
+        task = @current_user.tasks.new task_params
         if(task.save)
             json_string = TaskSerializer.new(task).serializable_hash.to_json
             render json: json_string, status: :created
@@ -47,7 +49,7 @@ class TasksController < ApplicationController
     private
 
     def task_params
-        params.require(:task).permit(:title, :body, :is_done)
+        params.require(:task).permit(:title, :body, :is_done, :user_id)
     end
 
     def set_task!
