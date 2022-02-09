@@ -1,5 +1,4 @@
 class TasksController < ApplicationController
-    skip_before_action :verify_authenticity_token
     before_action :set_task!, only: %i[show update destroy]
 
     # GET /tasks

@@ -6,22 +6,3 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 AdminUser.first_or_create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
-
-Category.destroy_all
-
-Category.create!([
-    {
-        title: "Home",
-        task_id: 1
-    },
-    {
-        title: "Work",
-        task_id: 1
-    },
-    {
-        title: "Shop",
-        task_id: 1
-    }
-])
-
-p "Created #{Category.count} categories."
