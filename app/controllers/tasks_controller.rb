@@ -6,7 +6,10 @@ class TasksController < ApplicationController
     # GET /tasks
     def index
         @task = @current_user.tasks.all
-        json_string = TaskSerializer.new(@task).serializable_hash.to_json
+        options = {
+            include: [:categories]
+        }
+        json_string = TaskSerializer.new(@task, options).serializable_hash.to_json
         render json: json_string
     end
 
@@ -40,6 +43,15 @@ class TasksController < ApplicationController
         end
     end
 
+    def add_category
+        if @task.update task_params
+            json_string = TaskSerializer.new(@task).serializable_hash.to_json
+            render json: json_string, status: :ok
+        else
+            render json: @task.errors, status: :unprocessable_entity
+        end
+    end
+
     # DELETE /tasks/:id
     def destroy
         @task.destroy
@@ -49,7 +61,7 @@ class TasksController < ApplicationController
     private
 
     def task_params
-        params.require(:task).permit(:title, :body, :is_done, :user_id)
+        params.require(:task).permit(:title, :body, :is_done, :user_id, :category_id)
     end
 
     def set_task!

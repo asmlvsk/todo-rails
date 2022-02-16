@@ -1,0 +1,3 @@
+class CategoriesTasks < ApplicationRecord
+
+end

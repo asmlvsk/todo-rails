@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :users
-  resources :categories
-  resources :tasks, only: [:index, :create, :update, :destroy, :show]
+  resources :categories, only: [:index]
+  resources :tasks, only: [:index, :create, :update, :destroy, :show] do
+    resources :categories, controller: 'categories_tasks'
+  end
   resources :sessions, only: [:create]
   resources :registrations, only: [:create]
   delete :logout, to: "sessions#logout"
