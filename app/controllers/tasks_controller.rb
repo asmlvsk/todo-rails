@@ -34,6 +34,16 @@ class TasksController < ApplicationController
     end
 
     # PATCH /tasks/:id
+    def update 
+        task_categories = params[:task][:categories].map{|category| category["id"]}
+        @task.categories.destroy_all
+        task_categories.each do |a|
+            CategoriesTasks.create(category_id: a, task_id: @task.id)
+        end
+        json_string = TaskSerializer.new(@task).serializable_hash.to_json
+        render json: json_string, status: :ok
+    end
+
     def update
         if @task.update task_params
             json_string = TaskSerializer.new(@task).serializable_hash.to_json
@@ -43,14 +53,6 @@ class TasksController < ApplicationController
         end
     end
 
-    def add_category
-        if @task.update task_params
-            json_string = TaskSerializer.new(@task).serializable_hash.to_json
-            render json: json_string, status: :ok
-        else
-            render json: @task.errors, status: :unprocessable_entity
-        end
-    end
 
     # DELETE /tasks/:id
     def destroy
@@ -61,8 +63,9 @@ class TasksController < ApplicationController
     private
 
     def task_params
-        params.require(:task).permit(:title, :body, :is_done, :user_id, :category_id)
+        params.require(:task).permit(:title, :body, :is_done)
     end
+    
 
     def set_task!
         @task = Task.find_by id: params[:id]
